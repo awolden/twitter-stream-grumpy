@@ -32,13 +32,13 @@ module.exports = ['$scope', 'tweetIo',
             $scope.criteria.sort.name = sort;
             switch (sort) {
             case "Recent":
-                $scope.criteria.sort.expr = 'id';
+                $scope.criteria.sort.expr = '-id';
                 break;
             case "Favorites":
                 $scope.criteria.sort.expr = '-favorite_count';
                 break;
             case "Oldest":
-                $scope.criteria.sort.expr = '-id';
+                $scope.criteria.sort.expr = 'id';
                 break;
             case "Retweets":
                 $scope.criteria.sort.expr = '-retweet_count';

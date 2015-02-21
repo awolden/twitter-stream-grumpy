@@ -48,7 +48,7 @@ module.exports = ['$rootScope', 'io',
         self.criteria = {
             sort: {
                 name: "Recent",
-                expr: 'id'
+                expr: '-id'
             }
         };
 

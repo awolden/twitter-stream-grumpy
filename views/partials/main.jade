@@ -4,38 +4,43 @@
   .col-md-8.content
     h3 Sort and Filter Tweets
     .well
-      form.form-horizontal
-        .form-group
-          label(for='sort') Sort
-          .dropdown
-            button#sort.btn.btn-default.dropdown-toggle(type='button', aria-expanded="true", data-toggle='dropdown')
-              | {{criteria.sort.name}} 
-              span.caret
-            ul.dropdown-menu(role='menu', aria-labelledby='sort')
-              li(role='presentation')
-                a(role='menuitem', tabindex='-1' ng-click='setSort("Recent")') Recent
-              li(role='presentation')
-                a(role='menuitem', tabindex='-1' ng-click='setSort("Oldest")') Oldest
-              li(role='presentation')
-                a(role='menuitem', tabindex='-1' ng-click='setSort("Favorites")') Favorites
-              li(role='presentation')
-                a(role='menuitem', tabindex='-1' ng-click='setSort("Retweets")') Retweets
-                          
-        .form-group
-          label(for='filter') Filter Text
-          input#filter.form-control(type='text', ng-model='criteria.filter', ng-change='filterChanged()', placeholder='Filter Text')
+      .criteria
+        form.form-horizontal
+          .form-group
+            label(for='sort') Sort
+            .dropdown
+              button#sort.btn.btn-default.dropdown-toggle(type='button', aria-expanded="true", data-toggle='dropdown')
+                | {{criteria.sort.name}} 
+                span.caret
+              ul.dropdown-menu(role='menu', aria-labelledby='sort')
+                li(role='presentation')
+                  a(role='menuitem', tabindex='-1' ng-click='setSort("Recent")') Recent
+                li(role='presentation')
+                  a(role='menuitem', tabindex='-1' ng-click='setSort("Oldest")') Oldest
+                li(role='presentation')
+                  a(role='menuitem', tabindex='-1' ng-click='setSort("Favorites")') Favorites
+                li(role='presentation')
+                  a(role='menuitem', tabindex='-1' ng-click='setSort("Retweets")') Retweets
+          .form-group
+            label(for='filter') Filter Text
+            input#filter.form-control(type='text', ng-model='criteria.filter', ng-change='filterChanged()', placeholder='Filter Text')
             
     h3 Tweets
     ul.list-unstyled
+      //TODO: Move tweet to directive
       li(ng-repeat="tweet in data.tweets", ng-click='openTweet(tweet)')
         .well
-          img(ng-src='{{tweet.user.profile_image_url}}')
-          div  Tweeter: {{tweet.user.name}} {{tweet.user.screen_name}}
-          div  Created: {{tweet.created_at}}
-          div  Content: {{tweet.text}}
-          div  Retweets: {{tweet.retweet_count}}
-          div  Content: {{tweet.favorite_count}}
-          | {{tweet.text}}
+          div.user-bar.clearfix
+            img.pull-left(ng-src='{{tweet.user.profile_image_url}}')
+            .user-details
+              h3 {{tweet.user.name}}  
+                small {{tweet.user.screen_name}}
+              div {{ tweet.created_at | fromNow }}
+          .tweet-body(ng-bind-html='tweet.text | highlight: criteria.filter')
+          ul.tweet-details.list-unstyled.list-inline
+            li Retweets: {{tweet.retweet_count}}
+            li Favorite Count: {{tweet.favorite_count}}
+            li HashTags: {{tweet.entities.hashtags | hashToText}}
       li
         button.btn-block.btn.btn-primary(ng-click='moreTweets()')
          | Get More Tweets
