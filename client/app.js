@@ -11,6 +11,8 @@ app.config(function ($routeProvider) {
     $routeProvider
         .when('/', {
             templateUrl: 'partials/main.html'
+        }).when('/tweet', {
+            templateUrl: 'partials/tweet.html'
         });
 });
 
