@@ -1,2 +1,24 @@
-h1 Hello Grumpy Cat
-  small  this shall contain the tweet list
+.row
+  h1 GrumpyCat and Maruthecat Tweets
+.row
+  .col-md-8.content
+    ul.list-unstyled
+      li(ng-repeat="tweet in data.tweets", ng-click='openTweet(tweet)')
+        .well
+          img(ng-src='{{tweet.user.profile_image_url}}')
+          div  Tweeter: {{tweet.user.name}} {{tweet.user.screen_name}}
+          div  Created: {{tweet.created_at}}
+          div  Content: {{tweet.text}}
+          div  Retweets: {{tweet.retweet_count}}
+          div  Content: {{tweet.favorite_count}}
+          | {{tweet.text}}
+      li
+        button.btn-block.btn.btn-primary(ng-click='moreTweets()')
+         | Get More Tweets
+  .col-md-4.tweets
+    .well
+      h3 Top Tweeters
+      ul.list-unstyled
+        li(ng-repeat="user in data.topUsers")
+          strong {{user._id.name}} - 
+          span {{user.count}}

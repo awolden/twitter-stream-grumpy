@@ -29,6 +29,37 @@ app.service('tweetIo', require('./services/tweet-io'));
 module.exports = ['$scope', 'tweetIo',
     function ($scope, tweetIo) {
 
+        $scope.data = {
+            tweets: tweetIo.tweets,
+            topUsers: tweetIo.stats.top
+        };
+
+        /*
+         * $scope functions
+         */
+        $scope.openTweet = function (tweet) {
+            //open tweet on click
+        };
+
+        $scope.moreTweets = function () {
+            tweetIo.moreTweets();
+        };
+
+        /*
+         * Listeners
+         */
+        $scope.$on('newTweets', function () {
+            $scope.$apply(function () {
+                $scope.data.tweets = tweetIo.tweets;
+            });
+        });
+        $scope.$on('newStats', function () {
+            $scope.$apply(function () {
+                $scope.data.topUsers = tweetIo.stats.top;
+            });
+        });
+
+
 
     }
 ];
@@ -49,6 +80,7 @@ module.exports = ['$rootScope', 'io',
         self.socket.on('welcome', function () {
             console.log('the server has welcomed us');
             self.socket.emit('getTweets');
+            self.socket.emit('getStats');
         });
 
         self.socket.on('tweets', function (tweets) {
@@ -63,8 +95,14 @@ module.exports = ['$rootScope', 'io',
                 if (uniq) self.tweets.push(tweet);
 
             });
-
+            $rootScope.$broadcast('newTweets');
             console.log('The server has sent us some delicious tweets ->', self.tweets);
+        });
+
+        self.socket.on('stats', function (stats) {
+            self.stats.top = stats;
+            console.log('the server sent us some stats ->', stats);
+            $rootScope.$broadcast('newStats');
         });
 
         /*
@@ -72,6 +110,18 @@ module.exports = ['$rootScope', 'io',
          */
 
         self.tweets = [];
+        self.stats = {};
+
+        //get more tweets from server
+        self.moreTweets = function () {
+            self.socket.emit('moreTweetsPls', {
+                offset: self.tweets.length,
+                sort: null,
+                filter: null
+            });
+            console.log('getting more tweets');
+        }
+
 
     }
 ];
