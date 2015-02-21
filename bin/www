@@ -8,6 +8,8 @@
 var app = require('../app');
 var debug = require('debug')('grumpy-twitter:server');
 var http = require('http');
+var TweetSocket = require('../lib/tweet-sockets');
+
 
 /**
  * Get port from environment and store in Express.
@@ -21,6 +23,12 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+
+/**
+ * Socket Listener
+ */
+var socketServer = new TweetSocket(server);
+
 
 /**
  * Listen on provided port, on all network interfaces.
