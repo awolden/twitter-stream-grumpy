@@ -34,6 +34,8 @@ module.exports = ['$scope', 'tweetIo',
             topUsers: tweetIo.stats.top
         };
 
+        $scope.criteria = tweetIo.criteria;
+
         /*
          * $scope functions
          */
@@ -44,6 +46,34 @@ module.exports = ['$scope', 'tweetIo',
         $scope.moreTweets = function () {
             tweetIo.moreTweets();
         };
+
+        $scope.filterChanged = function () {
+            tweetIo.refreshTweets();
+        };
+
+        $scope.setSort = function (sort) {
+
+            if ($scope.criteria.sort.name === sort) return;
+
+            $scope.criteria.sort.name = sort;
+            switch (sort) {
+            case "Recent":
+                $scope.criteria.sort.expr = 'id';
+                break;
+            case "Favorites":
+                $scope.criteria.sort.expr = '-favorite_count';
+                break;
+            case "Oldest":
+                $scope.criteria.sort.expr = '-id';
+                break;
+            case "Retweets":
+                $scope.criteria.sort.expr = '-retweet_count';
+                break;
+            }
+
+            tweetIo.refreshTweets();
+        };
+
 
         /*
          * Listeners
@@ -79,7 +109,7 @@ module.exports = ['$rootScope', 'io',
 
         self.socket.on('welcome', function () {
             console.log('the server has welcomed us');
-            self.socket.emit('getTweets');
+            self.moreTweets();
             self.socket.emit('getStats');
         });
 
@@ -111,17 +141,28 @@ module.exports = ['$rootScope', 'io',
 
         self.tweets = [];
         self.stats = {};
+        self.criteria = {
+            sort: {
+                name: "Recent",
+                expr: 'id'
+            }
+        };
 
         //get more tweets from server
         self.moreTweets = function () {
             self.socket.emit('moreTweetsPls', {
                 offset: self.tweets.length,
-                sort: null,
-                filter: null
+                criteria: self.criteria
             });
-            console.log('getting more tweets');
-        }
+        };
 
+        self.refreshTweets = function () {
+            self.tweets = [];
+            self.socket.emit('moreTweetsPls', {
+                offset: self.tweets.length,
+                criteria: self.criteria
+            });
+        };
 
     }
 ];

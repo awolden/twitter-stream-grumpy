@@ -13,7 +13,7 @@ module.exports = ['$rootScope', 'io',
 
         self.socket.on('welcome', function () {
             console.log('the server has welcomed us');
-            self.socket.emit('getTweets');
+            self.moreTweets();
             self.socket.emit('getStats');
         });
 
@@ -45,17 +45,28 @@ module.exports = ['$rootScope', 'io',
 
         self.tweets = [];
         self.stats = {};
+        self.criteria = {
+            sort: {
+                name: "Recent",
+                expr: 'id'
+            }
+        };
 
         //get more tweets from server
         self.moreTweets = function () {
             self.socket.emit('moreTweetsPls', {
                 offset: self.tweets.length,
-                sort: null,
-                filter: null
+                criteria: self.criteria
             });
-            console.log('getting more tweets');
-        }
+        };
 
+        self.refreshTweets = function () {
+            self.tweets = [];
+            self.socket.emit('moreTweetsPls', {
+                offset: self.tweets.length,
+                criteria: self.criteria
+            });
+        };
 
     }
 ];

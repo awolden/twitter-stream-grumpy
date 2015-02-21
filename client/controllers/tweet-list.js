@@ -8,6 +8,8 @@ module.exports = ['$scope', 'tweetIo',
             topUsers: tweetIo.stats.top
         };
 
+        $scope.criteria = tweetIo.criteria;
+
         /*
          * $scope functions
          */
@@ -18,6 +20,34 @@ module.exports = ['$scope', 'tweetIo',
         $scope.moreTweets = function () {
             tweetIo.moreTweets();
         };
+
+        $scope.filterChanged = function () {
+            tweetIo.refreshTweets();
+        };
+
+        $scope.setSort = function (sort) {
+
+            if ($scope.criteria.sort.name === sort) return;
+
+            $scope.criteria.sort.name = sort;
+            switch (sort) {
+            case "Recent":
+                $scope.criteria.sort.expr = 'id';
+                break;
+            case "Favorites":
+                $scope.criteria.sort.expr = '-favorite_count';
+                break;
+            case "Oldest":
+                $scope.criteria.sort.expr = '-id';
+                break;
+            case "Retweets":
+                $scope.criteria.sort.expr = '-retweet_count';
+                break;
+            }
+
+            tweetIo.refreshTweets();
+        };
+
 
         /*
          * Listeners

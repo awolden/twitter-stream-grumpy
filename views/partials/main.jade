@@ -2,6 +2,30 @@
   h1 GrumpyCat and Maruthecat Tweets
 .row
   .col-md-8.content
+    h3 Sort and Filter Tweets
+    .well
+      form.form-horizontal
+        .form-group
+          label(for='sort') Sort
+          .dropdown
+            button#sort.btn.btn-default.dropdown-toggle(type='button', aria-expanded="true", data-toggle='dropdown')
+              | {{criteria.sort.name}} 
+              span.caret
+            ul.dropdown-menu(role='menu', aria-labelledby='sort')
+              li(role='presentation')
+                a(role='menuitem', tabindex='-1' ng-click='setSort("Recent")') Recent
+              li(role='presentation')
+                a(role='menuitem', tabindex='-1' ng-click='setSort("Oldest")') Oldest
+              li(role='presentation')
+                a(role='menuitem', tabindex='-1' ng-click='setSort("Favorites")') Favorites
+              li(role='presentation')
+                a(role='menuitem', tabindex='-1' ng-click='setSort("Retweets")') Retweets
+                          
+        .form-group
+          label(for='filter') Filter Text
+          input#filter.form-control(type='text', ng-model='criteria.filter', ng-change='filterChanged()', placeholder='Filter Text')
+            
+    h3 Tweets
     ul.list-unstyled
       li(ng-repeat="tweet in data.tweets", ng-click='openTweet(tweet)')
         .well
@@ -16,8 +40,8 @@
         button.btn-block.btn.btn-primary(ng-click='moreTweets()')
          | Get More Tweets
   .col-md-4.tweets
+    h3 Top Tweeters
     .well
-      h3 Top Tweeters
       ul.list-unstyled
         li(ng-repeat="user in data.topUsers")
           strong {{user._id.name}} - 
