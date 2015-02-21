@@ -3,30 +3,79 @@
 
 require("./../public/components/angular/angular.js");
 require("./../public/components/angular-route/angular-route.js");
-window.io = require("./../public/components/sio-client/socket.io.js");
 window._ = require('lodash');
+var io = require("./../public/components/sio-client/socket.io.js");
 
 var app = angular.module('grumpy-twitter', ['ngRoute']);
 
 app.config(function ($routeProvider) {
     $routeProvider
         .when('/', {
-            templateUrl: 'partials/main.html'
+            templateUrl: 'partials/main.html',
+            controller: 'tweetList'
         }).when('/tweet', {
             templateUrl: 'partials/tweet.html'
         });
 });
 
-var socket = io();
-socket.on('welcome', function () {
-    console.log('the server has welcomed us');
-});
+app.constant('io', io);
 
-setTimeout(function () {
-    console.log('disconnecting')
-    socket.disconnect();
-}, 5000);
-},{"./../public/components/angular-route/angular-route.js":3,"./../public/components/angular/angular.js":4,"./../public/components/sio-client/socket.io.js":5,"lodash":2}],2:[function(require,module,exports){
+app.controller('tweetList', require('./controllers/tweet-list'));
+
+app.service('tweetIo', require('./services/tweet-io'));
+},{"./../public/components/angular-route/angular-route.js":5,"./../public/components/angular/angular.js":6,"./../public/components/sio-client/socket.io.js":7,"./controllers/tweet-list":2,"./services/tweet-io":3,"lodash":4}],2:[function(require,module,exports){
+'use strict';
+
+module.exports = ['$scope', 'tweetIo',
+    function ($scope, tweetIo) {
+
+
+    }
+];
+},{}],3:[function(require,module,exports){
+'use strict';
+
+module.exports = ['$rootScope', 'io',
+    function ($rootScope, io) {
+
+        var self = this;
+
+        /*
+         * Configure socket connection
+         */
+        self.socket = io();
+        console.log(io);
+
+        self.socket.on('welcome', function () {
+            console.log('the server has welcomed us');
+            self.socket.emit('getTweets');
+        });
+
+        self.socket.on('tweets', function (tweets) {
+
+            //guarantee uniqueness of tweet
+            _.each(tweets, function (tweet) {
+
+                var uniq = !_.findWhere(self.tweets, {
+                    id: tweet.id
+                });
+
+                if (uniq) self.tweets.push(tweet);
+
+            });
+
+            console.log('The server has sent us some delicious tweets ->', self.tweets);
+        });
+
+        /*
+         * Configure service
+         */
+
+        self.tweets = [];
+
+    }
+];
+},{}],4:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -10854,7 +10903,7 @@ setTimeout(function () {
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],3:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 /**
  * @license AngularJS v1.3.13
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -11845,7 +11894,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
 })(window, window.angular);
 
-},{}],4:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 /**
  * @license AngularJS v1.3.13
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -37976,7 +38025,7 @@ var minlengthDirective = function() {
 })(window, document);
 
 !window.angular.$$csp() && window.angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}</style>');
-},{}],5:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function (global){
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.io=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 

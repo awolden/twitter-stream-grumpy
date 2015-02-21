@@ -2,26 +2,23 @@
 
 require('angular');
 require('angular-route');
-window.io = require('sio-client');
 window._ = require('lodash');
+var io = require('sio-client');
 
 var app = angular.module('grumpy-twitter', ['ngRoute']);
 
 app.config(function ($routeProvider) {
     $routeProvider
         .when('/', {
-            templateUrl: 'partials/main.html'
+            templateUrl: 'partials/main.html',
+            controller: 'tweetList'
         }).when('/tweet', {
             templateUrl: 'partials/tweet.html'
         });
 });
 
-var socket = io();
-socket.on('welcome', function () {
-    console.log('the server has welcomed us');
-});
+app.constant('io', io);
 
-setTimeout(function () {
-    console.log('disconnecting')
-    socket.disconnect();
-}, 5000);
+app.controller('tweetList', require('./controllers/tweet-list'));
+
+app.service('tweetIo', require('./services/tweet-io'));
