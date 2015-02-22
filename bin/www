@@ -9,13 +9,14 @@ var app = require('../app'),
     debug = require('debug')('grumpy-twitter:server'),
     http = require('http'),
     TweetSocket = require('../lib/tweet-sockets'),
-    tweetListener = require('../lib/tweet-listener');
+    tweetListener = require('../lib/tweet-listener'),
+    config = require('../config');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = parseInt(process.env.PORT, 10) || 3000;
+var port = config.port || 3000;
 app.set('port', port);
 
 /**
