@@ -20,10 +20,10 @@ describe('Tweet Sockets', function (done) {
 
     before(function (done) {
         mock.createTweets(done);
-    })
+    });
     after(function (done) {
         mock.destroyTweets(done);
-    })
+    });
 
     //TODO: Mock socket connection and test
 
