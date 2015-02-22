@@ -10,11 +10,9 @@ var Twit = require('twit'),
 
 //backfill set amount of messages into the application so we have a health dataset to work with
 //could theoretically load all relevant tweets but the api is rate limited.
-for (var i = msgsToLoad; i > 0; i -= msgsPerCall) {
-
-}
-
 function getPage(msgs, count, maxId) {
+
+    console.log('calling getpage ->', msgs, count, maxId);
 
     if (msgs <= 0) {
         console.log('complete');
@@ -34,7 +32,10 @@ function getPage(msgs, count, maxId) {
         console.log('tweets returned and processing ->', data.statuses.length);
 
         //trigger next page load
-        getPage((msgs - count), count, data.statuses[data.statuses.length - 1].id);
+        if (data.statuses.length)
+            getPage((msgs - count), count, data.statuses[data.statuses.length - 1].id);
+        else
+            console.log('no more tweets available. Stopping import.')
 
         data.statuses.forEach(function (tweet) {
             Tweet.update({
