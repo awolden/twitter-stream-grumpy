@@ -27,20 +27,8 @@
             
     h3 Tweets
     ul.list-unstyled
-      //TODO: Move tweet to directive
       li(ng-repeat="tweet in data.tweets", ng-click='openTweet(tweet)')
-        .well
-          div.user-bar.clearfix
-            img.pull-left(ng-src='{{tweet.user.profile_image_url}}')
-            .user-details
-              h3 {{tweet.user.name}}  
-                small {{tweet.user.screen_name}}
-              div {{ tweet.created_at | fromNow }}
-          .tweet-body(ng-bind-html='tweet.text | highlight: criteria.filter')
-          ul.tweet-details.list-unstyled.list-inline
-            li Retweets: {{tweet.retweet_count}}
-            li Favorite Count: {{tweet.favorite_count}}
-            li HashTags: {{tweet.entities.hashtags | hashToText}}
+        tweet(tweet='tweet')
       li
         button.btn-block.btn.btn-primary(ng-click='moreTweets()')
          | Get More Tweets

@@ -14,7 +14,7 @@ module.exports = ['$scope', 'tweetIo',
          * $scope functions
          */
         $scope.openTweet = function (tweet) {
-            //open tweet on click
+            tweetIo.selectTweet(tweet);
         };
 
         $scope.moreTweets = function () {

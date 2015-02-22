@@ -29,6 +29,17 @@ a {
 }
 .tweet-body {
     font-size: 18px;
-    padding: 20px;
+    padding: 10px 20px 20px 20px;
+    margin-top: 10px;
+    border-top: 1px solid #e7e7e7;
 }
-.tweet-details {}
+.tweet-media {
+    padding: 5px 15px 15px 15px;
+}
+.tweet-media img {
+    border: 1px solid #e7e7e7;
+    padding: 2px;
+}
+.single-tweet {
+    margin-top: 20px;
+}

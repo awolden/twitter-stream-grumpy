@@ -15,24 +15,59 @@ app.config(function ($routeProvider) {
         .when('/', {
             templateUrl: 'partials/main.html',
             controller: 'tweetList'
-        }).when('/tweet', {
-            templateUrl: 'partials/tweet.html'
+        }).when('/tweet/:tweetid', {
+            templateUrl: 'partials/individual-tweet.html',
+            controller: 'singleTweet'
         });
 });
+
+app.run(['$rootScope', '$location',
+    function ($rootScope, $location) {
+        $rootScope.$on('tweetSelected', function (event, tweet) {
+            $location.path('/tweet/' + tweet.id);
+        });
+    }
+]);
+
+
 
 app.constant('io', io);
 
 /* Controllers */
 app.controller('tweetList', require('./controllers/tweet-list'));
+app.controller('singleTweet', require('./controllers/single-tweet'));
 
 /* Services */
 app.service('tweetIo', require('./services/tweet-io'));
+
+/* Directives */
+app.directive('tweet', require('./directives/tweet'));
 
 /* Filters */
 app.filter('fromNow', require('./filters/from-now'));
 app.filter('highlight', require('./filters/highlight'));
 app.filter('hashToText', require('./filters/hash-to-text'));
-},{"./../public/components/angular-route/angular-route.js":8,"./../public/components/angular-sanitize/angular-sanitize.js":9,"./../public/components/angular/angular.js":10,"./../public/components/moment/moment.js":11,"./../public/components/sio-client/socket.io.js":12,"./controllers/tweet-list":2,"./filters/from-now":3,"./filters/hash-to-text":4,"./filters/highlight":5,"./services/tweet-io":6,"lodash":7}],2:[function(require,module,exports){
+},{"./../public/components/angular-route/angular-route.js":10,"./../public/components/angular-sanitize/angular-sanitize.js":11,"./../public/components/angular/angular.js":12,"./../public/components/moment/moment.js":13,"./../public/components/sio-client/socket.io.js":14,"./controllers/single-tweet":2,"./controllers/tweet-list":3,"./directives/tweet":4,"./filters/from-now":5,"./filters/hash-to-text":6,"./filters/highlight":7,"./services/tweet-io":8,"lodash":9}],2:[function(require,module,exports){
+'use strict';
+
+module.exports = ['$scope', 'tweetIo', '$location', '$window',
+    function ($scope, tweetIo, $location, $window) {
+
+        $scope.tweet = tweetIo.selectedTweet;
+        $scope.$window = $window;
+
+        //TODO: handle direct calls to this page
+        if (_.isEmpty($scope.tweet)) {
+            $location.path('/');
+        }
+
+        $scope.back = function () {
+            $window.history.back();
+        };
+
+    }
+];
+},{}],3:[function(require,module,exports){
 'use strict';
 
 module.exports = ['$scope', 'tweetIo',
@@ -49,7 +84,7 @@ module.exports = ['$scope', 'tweetIo',
          * $scope functions
          */
         $scope.openTweet = function (tweet) {
-            //open tweet on click
+            tweetIo.selectTweet(tweet);
         };
 
         $scope.moreTweets = function () {
@@ -102,7 +137,22 @@ module.exports = ['$scope', 'tweetIo',
 
     }
 ];
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
+'use strict';
+
+
+module.exports = [function () {
+    return {
+        scope: {
+            tweet: '=tweet',
+        },
+        restrict: 'E',
+        templateUrl: '/partials/tweet.html',
+        controller: function ($scope, $element) {},
+        link: function (scope, el, attr) {}
+    }
+}];
+},{}],5:[function(require,module,exports){
 'use strict';
 
 /*globals moment*/
@@ -112,7 +162,7 @@ module.exports = function () {
         return moment(date).fromNow();
     };
 }
-},{}],4:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 /*globals moment*/
@@ -124,7 +174,7 @@ module.exports = function () {
         }).join(', ');
     };
 }
-},{}],5:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 module.exports = ['$sce', function ($sce) {
@@ -134,7 +184,7 @@ module.exports = ['$sce', function ($sce) {
         return $sce.trustAsHtml(text)
     };
 }]
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 module.exports = ['$rootScope', 'io',
@@ -146,7 +196,6 @@ module.exports = ['$rootScope', 'io',
          * Configure socket connection
          */
         self.socket = io();
-        console.log(io);
 
         self.socket.on('welcome', function () {
             console.log('the server has welcomed us');
@@ -181,6 +230,7 @@ module.exports = ['$rootScope', 'io',
          */
 
         self.tweets = [];
+        self.selectedTweet = {};
         self.stats = {};
         self.criteria = {
             sort: {
@@ -197,6 +247,7 @@ module.exports = ['$rootScope', 'io',
             });
         };
 
+        //clear tweets and get new list
         self.refreshTweets = function () {
             self.tweets = [];
             self.socket.emit('moreTweetsPls', {
@@ -205,9 +256,15 @@ module.exports = ['$rootScope', 'io',
             });
         };
 
+        //clear tweets and get new list
+        self.selectTweet = function (tweet) {
+            self.selectedTweet = tweet;
+            $rootScope.$broadcast('tweetSelected', tweet);
+        };
+
     }
 ];
-},{}],7:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -11035,7 +11092,7 @@ module.exports = ['$rootScope', 'io',
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],8:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 /**
  * @license AngularJS v1.3.13
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -12026,7 +12083,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
 })(window, window.angular);
 
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /**
  * @license AngularJS v1.3.13
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -12709,7 +12766,7 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 
 })(window, window.angular);
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /**
  * @license AngularJS v1.3.13
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -38840,7 +38897,7 @@ var minlengthDirective = function() {
 })(window, document);
 
 !window.angular.$$csp() && window.angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}</style>');
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 (function (global){
 //! moment.js
 //! version : 2.9.0
@@ -41887,7 +41944,7 @@ var minlengthDirective = function() {
 }).call(this);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function (global){
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.io=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 

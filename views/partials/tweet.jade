@@ -1,2 +1,19 @@
-h1 Hello maruthecat
-  small  this shall contain the tweet page
+.well
+  div.user-bar.clearfix
+    img.pull-left(ng-src='{{tweet.user.profile_image_url}}')
+    .user-details
+      h3 {{tweet.user.name}}  
+      small {{tweet.user.screen_name}}
+      div {{ tweet.created_at | fromNow }}
+  .tweet-body(ng-bind-html='tweet.text | highlight: criteria.filter')
+  //TODO: handle more media than photos
+  .tweet-media(ng-if='tweet.entities.media.length') 
+    ul.list-inline.list-unstyled
+      li(ng-repeat='media in tweet.entities.media')
+        a(href='{{media.media_url}}', target='_blank')
+          img(ng-if='media.type === "photo"', 
+          ng-src='{{media.media_url}}:thumb')
+  ul.tweet-details.list-unstyled.list-inline
+    li Retweets: {{tweet.retweet_count}}
+    li Favorite Count: {{tweet.favorite_count}}
+    li HashTags: {{tweet.entities.hashtags | hashToText}}

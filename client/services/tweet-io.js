@@ -9,7 +9,6 @@ module.exports = ['$rootScope', 'io',
          * Configure socket connection
          */
         self.socket = io();
-        console.log(io);
 
         self.socket.on('welcome', function () {
             console.log('the server has welcomed us');
@@ -44,6 +43,7 @@ module.exports = ['$rootScope', 'io',
          */
 
         self.tweets = [];
+        self.selectedTweet = {};
         self.stats = {};
         self.criteria = {
             sort: {
@@ -60,12 +60,19 @@ module.exports = ['$rootScope', 'io',
             });
         };
 
+        //clear tweets and get new list
         self.refreshTweets = function () {
             self.tweets = [];
             self.socket.emit('moreTweetsPls', {
                 offset: self.tweets.length,
                 criteria: self.criteria
             });
+        };
+
+        //clear tweets and get new list
+        self.selectTweet = function (tweet) {
+            self.selectedTweet = tweet;
+            $rootScope.$broadcast('tweetSelected', tweet);
         };
 
     }
