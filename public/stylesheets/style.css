@@ -16,6 +16,9 @@ html {
 a {
     color: #00B7FF;
 }
+.total {
+    margin-bottom: 5px;
+}
 .content-container,
 .content {
     height: 100%;

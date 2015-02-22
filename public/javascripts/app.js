@@ -74,7 +74,7 @@ module.exports = ['$scope', 'tweetIo',
 
         $scope.data = {
             tweets: tweetIo.tweets,
-            topUsers: tweetIo.stats.top
+            stats: tweetIo.stats
         };
 
         $scope.criteria = tweetIo.criteria;
@@ -124,7 +124,7 @@ module.exports = ['$scope', 'tweetIo',
         });
         $scope.$on('newStats', function () {
             $scope.$apply(function () {
-                $scope.data.topUsers = tweetIo.stats.top;
+                $scope.data.stats = tweetIo.stats;
             });
         });
 
@@ -199,7 +199,6 @@ module.exports = ['$rootScope', 'io',
         self.socket = io();
 
         self.socket.on('welcome', function () {
-            console.log('the server has welcomed us');
             self.moreTweets();
             self.socket.emit('getStats');
         });
@@ -221,7 +220,7 @@ module.exports = ['$rootScope', 'io',
         });
 
         self.socket.on('stats', function (stats) {
-            self.stats.top = stats;
+            self.stats = stats;
             console.log('the server sent us some stats ->', stats);
             $rootScope.$broadcast('newStats');
         });

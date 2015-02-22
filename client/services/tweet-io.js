@@ -11,7 +11,6 @@ module.exports = ['$rootScope', 'io',
         self.socket = io();
 
         self.socket.on('welcome', function () {
-            console.log('the server has welcomed us');
             self.moreTweets();
             self.socket.emit('getStats');
         });
@@ -33,7 +32,7 @@ module.exports = ['$rootScope', 'io',
         });
 
         self.socket.on('stats', function (stats) {
-            self.stats.top = stats;
+            self.stats = stats;
             console.log('the server sent us some stats ->', stats);
             $rootScope.$broadcast('newStats');
         });

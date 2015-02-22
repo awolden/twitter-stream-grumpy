@@ -4,8 +4,11 @@
   .col-md-4.col-md-push-8
     h3 Top Tweeters
     .well
+      .total
+        | Total Tweets in Aggregration: 
+        | {{data.stats.totalTweets}}
       ul.list-unstyled
-        li(ng-repeat="user in data.topUsers")
+        li(ng-repeat="user in data.stats.topUsers")
           strong {{user._id.name}} - 
           span {{user.count}}
   .col-md-8.content.col-md-pull-4

@@ -5,7 +5,7 @@ module.exports = ['$scope', 'tweetIo',
 
         $scope.data = {
             tweets: tweetIo.tweets,
-            topUsers: tweetIo.stats.top
+            stats: tweetIo.stats
         };
 
         $scope.criteria = tweetIo.criteria;
@@ -55,7 +55,7 @@ module.exports = ['$scope', 'tweetIo',
         });
         $scope.$on('newStats', function () {
             $scope.$apply(function () {
-                $scope.data.topUsers = tweetIo.stats.top;
+                $scope.data.stats = tweetIo.stats;
             });
         });
 
