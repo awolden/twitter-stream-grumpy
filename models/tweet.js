@@ -2,13 +2,13 @@
 
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    self = {};
+    self = {},
+    config = require('../config');
 
 /*
  * Setup Mongoose
  **/
-mongoose.connect('mongodb://localhost/tweets');
-
+mongoose.connect(config.mongoServer);
 
 /* Tweet Schema */
 var TweetSchema = new Schema({
@@ -20,6 +20,8 @@ var TweetSchema = new Schema({
         }
     }
 }, {
+    //allow any schema
+    //not advised, but I am lazy and the tweet schema would be huge
     strict: false
 });
 
