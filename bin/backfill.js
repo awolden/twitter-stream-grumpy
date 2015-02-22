@@ -2,7 +2,7 @@
 
 var Twit = require('twit'),
     config = require('../config'),
-    Tweet = require('../models/tweet'),
+    db = require('../models/tweet'),
     twit = new Twit(config.twit),
     msgsToLoad = 5000,
     msgsPerCall = 100;
@@ -30,7 +30,7 @@ function getPage(msgs, count, maxId) {
         if (err) console.log(err);
 
         console.log('tweets returned and processing ->', data.statuses.length);
-
+        console.log(data.statuses);
         //trigger next page load
         if (data.statuses.length)
             getPage((msgs - count), count, data.statuses[data.statuses.length - 1].id);
@@ -38,7 +38,7 @@ function getPage(msgs, count, maxId) {
             console.log('no more tweets available. Stopping import.')
 
         data.statuses.forEach(function (tweet) {
-            Tweet.update({
+            db.Tweet.update({
                 id: tweet.id
             }, tweet, {
                 upsert: true

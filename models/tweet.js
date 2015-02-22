@@ -8,26 +8,31 @@ var mongoose = require('mongoose'),
 /*
  * Setup Mongoose
  **/
-mongoose.connect(config.mongoServer);
 
-/* Tweet Schema */
-var TweetSchema = new Schema({
-    id: {
-        type: Number,
-        index: {
-            unique: true,
-            dropDups: true,
+module.exports = function (connString) {
+
+    var conn = mongoose.createConnection(connString || config.mongoServer);
+
+    /* Tweet Schema */
+    var TweetSchema = new Schema({
+        id: {
+            type: Number,
+            index: {
+                unique: true,
+                dropDups: true,
+            }
         }
-    }
-}, {
-    //allow any schema
-    //not advised, but I am lazy and the tweet schema would be huge
-    strict: false
-});
+    }, {
+        //allow any schema
+        //not advised, but I am lazy and the tweet schema would be huge
+        strict: false
+    });
 
-var TweetModel = mongoose.model('tModel', TweetSchema);
+    var TweetModel = conn.model('tModel', TweetSchema);
 
-/*
- * Construct Output Object
- **/
-module.exports = TweetModel;
+    //return object
+    return {
+        Tweet: TweetModel,
+    };
+
+};
