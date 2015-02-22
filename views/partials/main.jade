@@ -23,12 +23,13 @@
                   a(role='menuitem', tabindex='-1' ng-click='setSort("Retweets")') Retweets
           .form-group
             label(for='filter') Filter Text
+            //TODO: Prevent special character entry here
             input#filter.form-control(type='text', ng-model='criteria.filter', ng-change='filterChanged()', placeholder='Filter Text')
             
     h3 Tweets
     ul.list-unstyled
       li(ng-repeat="tweet in data.tweets")
-        tweet(tweet='tweet')
+        tweet(tweet='tweet',filter='criteria.filter')
       li
         button.btn-block.btn.btn-primary(ng-click='moreTweets()')
          | Get More Tweets

@@ -8,7 +8,7 @@
       h3 {{tweet.user.name}}  
         small {{tweet.user.screen_name}}
       div {{ tweet.created_at | fromNow }}
-  .tweet-body(ng-bind-html='tweet.text | highlight: criteria.filter')
+  .tweet-body(ng-bind-html='tweet.text | highlight: filter')
   //TODO: handle more media than photos
   .tweet-media(ng-if='tweet.entities.media.length') 
     ul.list-inline.list-unstyled

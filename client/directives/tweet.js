@@ -5,7 +5,8 @@ module.exports = [function () {
     return {
         scope: {
             tweet: '=tweet',
-            single: '=single'
+            single: '=single',
+            filter: '=filter'
         },
         restrict: 'E',
         templateUrl: '/partials/tweet.html',
