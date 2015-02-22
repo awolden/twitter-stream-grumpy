@@ -27,7 +27,7 @@
             
     h3 Tweets
     ul.list-unstyled
-      li(ng-repeat="tweet in data.tweets", ng-click='openTweet(tweet)')
+      li(ng-repeat="tweet in data.tweets")
         tweet(tweet='tweet')
       li
         button.btn-block.btn.btn-primary(ng-click='moreTweets()')

@@ -54,7 +54,6 @@ module.exports = ['$scope', 'tweetIo', '$location', '$window',
     function ($scope, tweetIo, $location, $window) {
 
         $scope.tweet = tweetIo.selectedTweet;
-        $scope.$window = $window;
 
         //TODO: handle direct calls to this page
         if (_.isEmpty($scope.tweet)) {
@@ -83,10 +82,6 @@ module.exports = ['$scope', 'tweetIo',
         /*
          * $scope functions
          */
-        $scope.openTweet = function (tweet) {
-            tweetIo.selectTweet(tweet);
-        };
-
         $scope.moreTweets = function () {
             tweetIo.moreTweets();
         };
@@ -145,10 +140,15 @@ module.exports = [function () {
     return {
         scope: {
             tweet: '=tweet',
+            single: '=single'
         },
         restrict: 'E',
         templateUrl: '/partials/tweet.html',
-        controller: function ($scope, $element) {},
+        controller: function ($scope, $element, tweetIo) {
+            $scope.openTweet = function (tweet) {
+                tweetIo.selectTweet(tweet);
+            };
+        },
         link: function (scope, el, attr) {}
     }
 }];

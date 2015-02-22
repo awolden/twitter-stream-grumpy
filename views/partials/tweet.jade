@@ -1,9 +1,12 @@
-.well
+.well.relative
+  span(ng-if='!single',ng-click='openTweet(tweet)').expand.muted
+    | Expand   
+    i.fa.fa-expand
   div.user-bar.clearfix
     img.pull-left(ng-src='{{tweet.user.profile_image_url}}')
     .user-details
       h3 {{tweet.user.name}}  
-      small {{tweet.user.screen_name}}
+        small {{tweet.user.screen_name}}
       div {{ tweet.created_at | fromNow }}
   .tweet-body(ng-bind-html='tweet.text | highlight: criteria.filter')
   //TODO: handle more media than photos

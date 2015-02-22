@@ -13,10 +13,6 @@ module.exports = ['$scope', 'tweetIo',
         /*
          * $scope functions
          */
-        $scope.openTweet = function (tweet) {
-            tweetIo.selectTweet(tweet);
-        };
-
         $scope.moreTweets = function () {
             tweetIo.moreTweets();
         };
