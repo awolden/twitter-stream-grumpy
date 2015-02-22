@@ -5,11 +5,11 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('grumpy-twitter:server');
-var http = require('http');
-var TweetSocket = require('../lib/tweet-sockets');
-
+var app = require('../app'),
+    debug = require('debug')('grumpy-twitter:server'),
+    http = require('http'),
+    TweetSocket = require('../lib/tweet-sockets'),
+    tweetListener = require('../lib/tweet-listener');
 
 /**
  * Get port from environment and store in Express.
@@ -29,6 +29,10 @@ var server = http.createServer(app);
  */
 var socketServer = new TweetSocket(server);
 
+/**
+ *Twitter Stream listener
+ */
+tweetListener.listen();
 
 /**
  * Listen on provided port, on all network interfaces.
