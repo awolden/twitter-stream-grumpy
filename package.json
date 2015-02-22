@@ -25,7 +25,8 @@
     "grunt-browserify": "~3.4.0",
     "debowerify": "~1.2.0",
     "q": "~1.2.0",
-    "karma": "~0.12.31"
+    "karma": "~0.12.31",
+    "chai-as-promised": "~4.2.0"
   },
   "browserify": {
     "transform": [
