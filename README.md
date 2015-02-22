@@ -7,9 +7,9 @@ Web application that streams tweets containing the hashtag #maruthecat and #grum
 
 #####Install Global Dependencies#####
 
-
-    npm install grunt-cli
-    npm install nodemon
+    npm install -g karma-cli
+    npm install -g grunt-cli
+    npm install -g nodemon
     sudo apt-get install mongodb
     sudo npm install bower
 

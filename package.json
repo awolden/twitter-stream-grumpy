@@ -26,7 +26,11 @@
     "debowerify": "~1.2.0",
     "q": "~1.2.0",
     "karma": "~0.12.31",
-    "chai-as-promised": "~4.2.0"
+    "chai-as-promised": "~4.2.0",
+    "karma-mocha": "~0.1.10",
+    "karma-chrome-launcher": "~0.1.7",
+    "karma-chai": "~0.1.0",
+    "karma-chai-plugins": "~0.2.4"
   },
   "browserify": {
     "transform": [

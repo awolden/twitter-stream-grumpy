@@ -94,6 +94,7 @@ module.exports = ['$scope', 'tweetIo',
 
             if ($scope.criteria.sort.name === sort) return;
 
+            //TODO: Enum these expresions and map them server side.
             $scope.criteria.sort.name = sort;
             switch (sort) {
             case "Recent":
