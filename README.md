@@ -62,4 +62,11 @@ The second way is use NPM start the application which will start grunt watch and
 
 ##Testing the Application##
 
-    //todo
+Run Server Side tests
+
+    npm test
+
+Run Karma Tests
+
+    cd test karma start karma.conf.js &
+    karma run
