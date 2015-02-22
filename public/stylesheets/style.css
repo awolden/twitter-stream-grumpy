@@ -2,10 +2,16 @@ body,
 html {
     height: 100%;
 }
-body {
-    background-image: url('../images/grump.jpg');
-    background-size: 100% 100%;
+#background {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: .1;
+    background-image: url('../images/grumpy-stencil.png');
     background-attachment: fixed;
+    background-position: center center;
+    background-repeat: no-repeat;
 }
 a {
     color: #00B7FF;
